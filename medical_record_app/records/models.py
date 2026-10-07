@@ -17,7 +17,7 @@ class MedicalRecord(models.Model):
     
     There is a one-to-one relationship between a medical record and a resident.
     """
-    resident = models.OneToOneField(Resident, on_delete=models.PROTECT)
+    resident = models.OneToOneField(Resident, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.id} - Medical record for {self.resident}"
@@ -37,6 +37,9 @@ class Diagnosis(models.Model):
         related_name="diagnoses"
     )
 
+    class Meta:
+        verbose_name_plural = "Diagnoses"
+
     def __str__(self):
         return f"{self.name}: {self.description}"
 
@@ -52,9 +55,12 @@ class MedicalRecordDiagnosis(models.Model):
     Further attributes:
         - diagnosis_date
     """
-    medical_record = models.ForeignKey(MedicalRecord)
-    diagnosis = models.ForeignKey(Diagnosis)
-    diagnosis_date = models.DateTimeField(auto_now=True)
+    medical_record = models.ForeignKey(MedicalRecord, on_delete=models.SET_NULL, null=True, blank=True)
+    diagnosis = models.ForeignKey(Diagnosis, on_delete=models.SET_NULL, null=True, blank=True)
+    diagnosis_date = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Medical record diagnoses"
 
     def __str__(self):
-        return f"{self.medical_record}: {self.diagnosis} diagnosed at {self.diagnosis_date}"
+        return f"{self.medical_record}: {self.diagnosis} diagnosed at {self.diagnosis_date.strftime('%d.%m.%Y %H:%M')}"
