@@ -1,0 +1,10 @@
+
+<h1>Medical records</h1>
+
+{% if medical_records %}
+    <ul>
+        {% for record in medical_records %}
+            <li><a href="{% url 'records:detail' record.id %}">{{ record }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
