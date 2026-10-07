@@ -21,6 +21,7 @@ Diagnosis
 
 MedicalRecordDiagnosis
 - id
+- created_at
 - diagnosis_id (FK)
 - medical_record_id(FK)
 
