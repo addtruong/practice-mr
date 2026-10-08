@@ -5,37 +5,77 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('records', '0002_medicalrecord'),
+        ("records", "0002_medicalrecord"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Diagnosis',
+            name="Diagnosis",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('description', models.CharField(max_length=300)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("description", models.CharField(max_length=300)),
             ],
         ),
         migrations.AlterField(
-            model_name='medicalrecord',
-            name='resident',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='records.resident'),
+            model_name="medicalrecord",
+            name="resident",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="records.resident",
+            ),
         ),
         migrations.CreateModel(
-            name='MedicalRecordDiagnosis',
+            name="MedicalRecordDiagnosis",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('diagnosis_date', models.DateTimeField(auto_now=True, null=True)),
-                ('diagnosis', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='records.diagnosis')),
-                ('medical_record', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='records.medicalrecord')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("diagnosis_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "diagnosis",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="records.diagnosis",
+                    ),
+                ),
+                (
+                    "medical_record",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="records.medicalrecord",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='diagnosis',
-            name='medical_records',
-            field=models.ManyToManyField(related_name='diagnoses', through='records.MedicalRecordDiagnosis', to='records.medicalrecord'),
+            model_name="diagnosis",
+            name="medical_records",
+            field=models.ManyToManyField(
+                related_name="diagnoses",
+                through="records.MedicalRecordDiagnosis",
+                to="records.medicalrecord",
+            ),
         ),
     ]

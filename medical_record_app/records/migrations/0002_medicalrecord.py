@@ -5,17 +5,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('records', '0001_initial'),
+        ("records", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MedicalRecord',
+            name="MedicalRecord",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('resident', models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, to='records.resident')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "resident",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="records.resident",
+                    ),
+                ),
             ],
         ),
     ]

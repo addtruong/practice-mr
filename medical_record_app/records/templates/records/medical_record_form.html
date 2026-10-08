@@ -1,5 +1,7 @@
+<h1>Create a new medical record</h1>
 <form method="post">
      {% csrf_token %}
      {{ form.as_p }}
      <button type="submit">Save medical record</button>
 </form>
+<a href="{% url 'records:index' %}">All medical records</a>

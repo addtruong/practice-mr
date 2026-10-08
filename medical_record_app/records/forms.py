@@ -1,14 +1,18 @@
-from django import forms 
+from django import forms
+
 from .models import Diagnosis, MedicalRecord, Resident
 
+
 class MedicalRecordForm(forms.ModelForm):
+    """Provide a form for creating and editing medical records."""
+
     diagnoses = forms.ModelMultipleChoiceField(
         queryset=Diagnosis.objects.all(),
         required=False,
     )
 
     class Meta:
-        model = MedicalRecord 
+        model = MedicalRecord
         fields = ["resident"]
 
     def __init__(self, *args, **kwargs):

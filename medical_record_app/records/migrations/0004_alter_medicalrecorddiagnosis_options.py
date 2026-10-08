@@ -4,14 +4,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('records', '0003_diagnosis_alter_medicalrecord_resident_and_more'),
+        ("records", "0003_diagnosis_alter_medicalrecord_resident_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='medicalrecorddiagnosis',
-            options={'verbose_name': 'Medical record diagnosis', 'verbose_name_plural': 'Medical record diagnoses'},
+            name="medicalrecorddiagnosis",
+            options={
+                "verbose_name": "Medical record diagnosis",
+                "verbose_name_plural": "Medical record diagnoses",
+            },
         ),
     ]
