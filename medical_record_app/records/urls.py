@@ -7,5 +7,7 @@ app_name = "records"
 urlpatterns = [
     path("", views.index, name="index"),
     path("<int:medical_record_id>/", views.detail, name="detail"),
-    path("new/", views.medical_record_create, name="create"),
+    path("<int:medical_record_id>/update", views.update, name="update"),
+    path("<int:medical_record_id>/delete/", views.delete, name="delete"),
+    path("new/", views.create, name="create"),
 ]
