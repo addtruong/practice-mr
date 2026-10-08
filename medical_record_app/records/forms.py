@@ -11,7 +11,7 @@ class MedicalRecordForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Dein Q-Filter, jetzt an einer Stelle, die auch beim POST validiert wird
+
         self.fields["resident"].queryset = Resident.objects.filter(
             Q(medicalrecord__isnull=True) | Q(pk=self.instance.resident_id)
         )
@@ -28,10 +28,19 @@ class MedicalRecordDiagnosisForm(forms.ModelForm):
         }
 
 
-DiagnosisFormSet = forms.inlineformset_factory(
+# A medical record has several diagnoses, therefore we need a list of forms (a FormSet)
+DiagnosisUpdateFormSet = forms.inlineformset_factory(
     MedicalRecord,
     MedicalRecordDiagnosis,
     form=MedicalRecordDiagnosisForm,
     extra=1,
     can_delete=True,
+)
+
+DiagnosisCreateFormSet = forms.inlineformset_factory(
+    MedicalRecord,
+    MedicalRecordDiagnosis,
+    form=MedicalRecordDiagnosisForm,
+    extra=3,
+    can_delete=False,
 )

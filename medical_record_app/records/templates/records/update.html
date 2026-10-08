@@ -1,20 +1,21 @@
-<h1>Update medical record</h1>
+<h1>Update Medical Record</h1>
+
 <form method="post">
-    {% csrf_token %}
+  {% csrf_token %}
 
-    <label for="resident">Resident:</label>
-    <select name="resident" id="resident">
-        {% for resident in residents %}
-            <option
-                value="{{ resident.pk }}"
-                {% if resident.pk == medical_record.resident.pk %}selected{% endif %}
-            >
-                {{ resident }}
-            </option>
-        {% endfor %}
-    </select>
+  {{ form.as_p }}
 
-    <button type="submit">Update</button>
+  <h2>Diagnoses</h2>
+
+  {{ formset.management_form }}
+
+  {% for f in formset %}
+    <div>
+      {{ f.as_p }}
+    </div>
+  {% endfor %}
+
+  <button type="submit">Update medical record</button>
 </form>
 
 <ul>

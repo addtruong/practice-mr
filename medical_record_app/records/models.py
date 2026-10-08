@@ -55,16 +55,15 @@ class MedicalRecordDiagnosis(models.Model):
         - diagnosis_date
     """
 
-    medical_record = models.ForeignKey(
-        MedicalRecord, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    diagnosis = models.ForeignKey(
-        Diagnosis, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    diagnosis_date = models.DateTimeField(auto_now=True, null=True, blank=True)
+    medical_record = models.ForeignKey(MedicalRecord, on_delete=models.CASCADE)
+    diagnosis = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
+    diagnosis_date = models.DateField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Medical record diagnoses"
 
     def __str__(self) -> str:
-        return f"{self.medical_record}: {self.diagnosis} diagnosed at {self.diagnosis_date.strftime('%d.%m.%Y %H:%M')}"
+        date = (
+            self.diagnosis_date("5d.%m.%Y") if self.diagnosis_date else "unknown date"
+        )
+        return f"{self.medical_record}: {self.diagnosis} diagnosed at {date}"

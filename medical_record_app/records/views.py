@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from .forms import DiagnosisCreateFormSet, DiagnosisUpdateFormSet, MedicalRecordForm
 from .models import MedicalRecord, Resident
 
 
@@ -33,71 +34,45 @@ def detail(request: HttpRequest, medical_record_id: int) -> HttpResponse:
 
 
 def create(request: HttpRequest) -> HttpResponse:
-    """Render form to create a new medical record.
-
-    Args:
-        request (HttpRequest): The HTTP request.
-
-    Returns:
-        HttpResponse: Form to create a new medical record.
-    """
-    residents_without_medical_record = Resident.objects.filter(
-        medicalrecord__isnull=True
-    )
-
     if request.method == "POST":
-        resident_id = request.POST["resident"]
-        resident = get_object_or_404(Resident, pk=resident_id)
+        form = MedicalRecordForm(request.POST)
+        formset = DiagnosisCreateFormSet(request.POST)
 
-        if MedicalRecord.objects.filter(resident=resident).exists():
-            return render(
-                request,
-                "records/create.html",
-                {
-                    "residents": residents_without_medical_record,
-                    "error": "This resident already has medical record.",
-                },
-                status=400,
-            )
+        if form.is_valid() and formset.is_valid():
+            medical_record = form.save()
+            formset.instance = medical_record
+            formset.save()
+            return redirect("records:detail", medical_record_id=medical_record.pk)
 
-        medical_record = MedicalRecord.objects.create(resident=resident)
-        return redirect("records:detail", medical_record_id=medical_record.pk)
+    else:
+        form = MedicalRecordForm()
+        formset = DiagnosisCreateFormSet()
 
-    return render(
-        request, "records/create.html", {"residents": residents_without_medical_record}
-    )
+    return render(request, "records/create.html", {"form": form, "formset": formset})
 
 
 def update(request: HttpRequest, medical_record_id: int) -> HttpResponse:
-    """Render update page to update an existing medical record.
-
-    Args:
-        request (HttpRequest): The HTTP request.
-        medical_record_id (int): ID of medical record.
-
-    Returns:
-        HttpResponse: Form to update an existing medical record.
-    """
     medical_record = get_object_or_404(MedicalRecord, id=medical_record_id)
 
     if request.method == "POST":
-        resident_id = request.POST["resident"]
-        resident = get_object_or_404(Resident, pk=resident_id)
-        medical_record.resident = resident
-        medical_record.save()
+        form = MedicalRecordForm(request.POST, instance=medical_record)
+        formset = DiagnosisCreateFormSet(request.POST, instance=medical_record)
 
-        return redirect("records:detail", medical_record_id=medical_record.pk)
-
-    residents = Resident.objects.filter(
-        Q(medicalrecord__isnull=True) | Q(pk=medical_record.resident_id)
-    )
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            return redirect("records:detail", medical_record_id=medical_record.pk)
+    else:
+        form = MedicalRecordForm(instance=medical_record)
+        formset = DiagnosisUpdateFormSet(instance=medical_record)
 
     return render(
         request,
         "records/update.html",
         {
+            "form": form,
+            "formset": formset,
             "medical_record": medical_record,
-            "residents": residents,
         },
     )
 
@@ -119,3 +94,73 @@ def delete(request: HttpRequest, medical_record_id: int) -> HttpResponse:
         return redirect("records:index")
 
     return redirect("records:detail", medical_record_id=medical_record_id)
+
+
+# def create(request: HttpRequest) -> HttpResponse:
+#     """Render form to create a new medical record.
+
+#     Args:
+#         request (HttpRequest): The HTTP request.
+
+#     Returns:
+#         HttpResponse: Form to create a new medical record.
+#     """
+#     residents_without_medical_record = Resident.objects.filter(
+#         medicalrecord__isnull=True
+#     )
+
+#     if request.method == "POST":
+#         resident_id = request.POST["resident"]
+#         resident = get_object_or_404(Resident, pk=resident_id)
+
+#         if MedicalRecord.objects.filter(resident=resident).exists():
+#             return render(
+#                 request,
+#                 "records/create.html",
+#                 {
+#                     "residents": residents_without_medical_record,
+#                     "error": "This resident already has medical record.",
+#                 },
+#                 status=400,
+#             )
+
+#         medical_record = MedicalRecord.objects.create(resident=resident)
+#         return redirect("records:detail", medical_record_id=medical_record.pk)
+
+#     return render(
+#         request, "records/create.html", {"residents": residents_without_medical_record}
+#     )
+
+
+# def update(request: HttpRequest, medical_record_id: int) -> HttpResponse:
+#     """Render update page to update an existing medical record.
+
+#     Args:
+#         request (HttpRequest): The HTTP request.
+#         medical_record_id (int): ID of medical record.
+
+#     Returns:
+#         HttpResponse: Form to update an existing medical record.
+#     """
+#     medical_record = get_object_or_404(MedicalRecord, id=medical_record_id)
+
+#     if request.method == "POST":
+#         resident_id = request.POST["resident"]
+#         resident = get_object_or_404(Resident, pk=resident_id)
+#         medical_record.resident = resident
+#         medical_record.save()
+
+#         return redirect("records:detail", medical_record_id=medical_record.pk)
+
+#     residents = Resident.objects.filter(
+#         Q(medicalrecord__isnull=True) | Q(pk=medical_record.resident_id)
+#     )
+
+#     return render(
+#         request,
+#         "records/update.html",
+#         {
+#             "medical_record": medical_record,
+#             "residents": residents,
+#         },
+#     )
