@@ -1,14 +1,16 @@
-<h1>Create a new medical record</h1>
-<form method="post">
-     {% csrf_token %}
-     <label for="resident">Resident</label>
-     <select name="resident" id="resident" required>
-          <option value="">-- Choose resident --</option>
+<h1>New Medical Record</h1>
 
-          {% for resident in residents %}
-               <option value="{{ resident.pk }}">{{ resident }}</option>
-          {% endfor %}
-     </select>
-     <button type="submit">Create medical record</button>
+<form method="post">
+  {% csrf_token %}
+
+  {{ form.as_p }}
+
+  <h2>Diagnoses</h2>
+  {{ formset.management_form }}
+
+  {% for f in formset %}
+    <div>{{ f.as_p }}</div>
+  {% endfor %}
+
+  <button type="submit">Create medical record</button>
 </form>
-<a href="{% url 'records:index' %}">All medical records</a>
