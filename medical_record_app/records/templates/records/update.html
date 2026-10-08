@@ -16,3 +16,12 @@
 
     <button type="submit">Update</button>
 </form>
+
+<ul>
+    <li>
+        <a href="{% url 'records:detail' medical_record.id %}">Back to medical record</a>
+    </li>
+    <li>
+        <a href="{% url 'records:index' %}">All medical records</a>
+    </li>
+</ul>

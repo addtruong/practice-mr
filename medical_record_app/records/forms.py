@@ -13,7 +13,7 @@ class MedicalRecordForm(forms.ModelForm):
 
     class Meta:
         model = MedicalRecord
-        fields = ["resident"]
+        fields = ["resident"]  # noqa: RUF012
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
