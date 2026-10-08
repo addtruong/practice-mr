@@ -1,0 +1,14 @@
+<h1>Create a new medical record</h1>
+<form method="post">
+     {% csrf_token %}
+     <label for="resident">Resident</label>
+     <select name="resident" id="resident" required>
+          <option value="">-- Choose resident --</option>
+
+          {% for resident in residents %}
+               <option value="{{ resident.pk }}">{{ resident }}</option>
+          {% endfor %}
+     </select>
+     <button type="submit">Create medical record</button>
+</form>
+<a href="{% url 'records:index' %}">All medical records</a>

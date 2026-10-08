@@ -1,10 +1,33 @@
 
 <h1>Medical records</h1>
 
+<a href="{% url 'records:create' %}">
+    <button type="button">
+        Create a new medical record
+    </button>
+</a>
 {% if medical_records %}
     <ul>
         {% for record in medical_records %}
-            <li><a href="{% url 'records:detail' record.id %}">{{ record }}</a></li>
+            <li>
+                <a href="{% url 'records:detail' record.id %}">{{ record }}</a>
+                <a href="{% url 'records:update' medical_record_id=record.id %}"><button type="button">
+                    Edit
+                </button></a>
+                <form
+                    method="post"
+                    action="{% url 'records:delete' record.id %}"
+                >
+                    {% csrf_token %}
+                    <button
+                        type="submit"
+                        onclick="return confirm('Do you want to delete this medical record?')"
+                    >
+                        Delete
+                    </button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 {% endif %}
+

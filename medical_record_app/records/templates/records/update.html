@@ -1,0 +1,18 @@
+<h1>Update medical record</h1>
+<form method="post">
+    {% csrf_token %}
+
+    <label for="resident">Resident:</label>
+    <select name="resident" id="resident">
+        {% for resident in residents %}
+            <option
+                value="{{ resident.pk }}"
+                {% if resident.pk == medical_record.resident.pk %}selected{% endif %}
+            >
+                {{ resident }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Update</button>
+</form>
