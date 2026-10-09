@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.db.models import Q
 
@@ -23,9 +25,17 @@ class MedicalRecordDiagnosisForm(forms.ModelForm):
         fields = ["diagnosis", "diagnosis_date"]  # noqa: RUF012
         widgets = {  # noqa: RUF012
             "diagnosis_date": forms.DateInput(
-                attrs={"type": "date"}, format="%Y-%m-%d"
+                attrs={"type": "date", "max": datetime.now().date()}, format="%Y-%m-%d"
             ),
         }
+
+    def clean_diagnosis_date(self):
+        diagnosis_date = self.cleaned_data["diagnosis_date"]
+
+        if diagnosis_date > datetime.now().date():
+            raise forms.ValidationError("Diagnosis date cannot be in the future.")
+
+        return diagnosis_date
 
 
 # A medical record has several diagnoses, therefore we need a list of forms (a FormSet)
