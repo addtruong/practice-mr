@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    path("medical-records/", include("records.urls")),
+    path("", RedirectView.as_view(url="/records/", permanent=True)),
     path("admin/", admin.site.urls),
+    path("records/", include("records.urls")),
 ]

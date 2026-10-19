@@ -6,6 +6,14 @@ from django.db.models import Q
 from .models import MedicalRecord, MedicalRecordDiagnosis, Resident
 
 
+# Forms for residents
+class ResidentForm(forms.ModelForm):
+    class Meta:
+        model = Resident
+        fields = "__all__"
+
+
+# Forms for medical record
 class MedicalRecordForm(forms.ModelForm):
     class Meta:
         model = MedicalRecord
@@ -32,7 +40,7 @@ class MedicalRecordDiagnosisForm(forms.ModelForm):
     def clean_diagnosis_date(self):
         diagnosis_date = self.cleaned_data["diagnosis_date"]
 
-        if diagnosis_date > datetime.now().date():
+        if diagnosis_date is not None and diagnosis_date > datetime.now().date():
             raise forms.ValidationError("Diagnosis date cannot be in the future.")
 
         return diagnosis_date

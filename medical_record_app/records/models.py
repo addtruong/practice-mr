@@ -4,8 +4,12 @@ from django.db import models
 class Resident(models.Model):
     """Represent a resident."""
 
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(
+        max_length=200, help_text="Please enter the first name of the resident."
+    )
+    last_name = models.CharField(
+        max_length=200, help_text="Please enter the last name of the resident."
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -18,7 +22,7 @@ class MedicalRecord(models.Model):
     """
 
     resident = models.OneToOneField(
-        Resident, on_delete=models.SET_NULL, null=True, blank=True
+        Resident, on_delete=models.CASCADE, null=True, blank=True
     )
 
     def __str__(self) -> str:
@@ -28,8 +32,12 @@ class MedicalRecord(models.Model):
 class Diagnosis(models.Model):
     """Represent a diagnosis which is associated with a medical record."""
 
-    name = models.CharField(max_length=200)
-    description = models.CharField(max_length=300)
+    name = models.CharField(
+        max_length=200, help_text="Please provide the name of the diagnosis."
+    )
+    description = models.CharField(
+        max_length=300, help_text="Please provide a description for the diagnosis."
+    )
 
     # Relationships
     medical_records = models.ManyToManyField(

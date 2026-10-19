@@ -1,9 +1,45 @@
-from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import DiagnosisCreateFormSet, DiagnosisUpdateFormSet, MedicalRecordForm
+from .forms import (
+    DiagnosisCreateFormSet,
+    DiagnosisUpdateFormSet,
+    MedicalRecordForm,
+    ResidentForm,
+)
 from .models import MedicalRecord, Resident
+
+
+# CRUD for medical records
+def create(request: HttpRequest) -> HttpResponse:
+    """Render the form to create a medical record.
+
+    Args:
+        request (HttpRequest): The HTTP request.
+
+    Returns:
+        HttpResponse: Create page.
+    """
+    if request.method == "POST":
+        form = MedicalRecordForm(request.POST)
+        formset = DiagnosisCreateFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            medical_record = form.save()
+            formset.instance = medical_record
+            formset.save()
+            return redirect("records:detail", medical_record_id=medical_record.pk)
+    else:
+        form = MedicalRecordForm()
+        formset = DiagnosisCreateFormSet()
+
+    context = {"form": form, "formset": formset}
+
+    return render(
+        request,
+        "records/create.html",
+        context,
+    )
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -16,7 +52,8 @@ def index(request: HttpRequest) -> HttpResponse:
         HttpResponse: Rendered index page.
     """
     medical_records = MedicalRecord.objects.all()
-    return render(request, "records/index.html", {"medical_records": medical_records})
+    context = {"medical_records": medical_records}
+    return render(request, "records/index.html", context)
 
 
 def detail(request: HttpRequest, medical_record_id: int) -> HttpResponse:
@@ -30,28 +67,20 @@ def detail(request: HttpRequest, medical_record_id: int) -> HttpResponse:
         HttpResponse: Rendered medical record detail page.
     """
     medical_record = MedicalRecord.objects.get(pk=medical_record_id)
-    return render(request, "records/detail.html", {"medical_record": medical_record})
-
-
-def create(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = MedicalRecordForm(request.POST)
-        formset = DiagnosisCreateFormSet(request.POST)
-
-        if form.is_valid() and formset.is_valid():
-            medical_record = form.save()
-            formset.instance = medical_record
-            formset.save()
-            return redirect("records:detail", medical_record_id=medical_record.pk)
-
-    else:
-        form = MedicalRecordForm()
-        formset = DiagnosisCreateFormSet()
-
-    return render(request, "records/create.html", {"form": form, "formset": formset})
+    context = {"medical_record": medical_record}
+    return render(request, "records/detail.html", context)
 
 
 def update(request: HttpRequest, medical_record_id: int) -> HttpResponse:
+    """Update a medical record.
+
+    Args:
+        request (HttpRequest): The HTTP request.
+        medical_record_id (int): The id of the medical record which will be updated.
+
+    Returns:
+        HttpResponse: If POST the user will be redirected, if GET the pre-populated form is shown.
+    """
     medical_record = get_object_or_404(MedicalRecord, id=medical_record_id)
 
     if request.method == "POST":
@@ -66,14 +95,16 @@ def update(request: HttpRequest, medical_record_id: int) -> HttpResponse:
         form = MedicalRecordForm(instance=medical_record)
         formset = DiagnosisUpdateFormSet(instance=medical_record)
 
+    context = {
+        "form": form,
+        "formset": formset,
+        "medical_record": medical_record,
+    }
+
     return render(
         request,
         "records/update.html",
-        {
-            "form": form,
-            "formset": formset,
-            "medical_record": medical_record,
-        },
+        context,
     )
 
 
@@ -96,71 +127,110 @@ def delete(request: HttpRequest, medical_record_id: int) -> HttpResponse:
     return redirect("records:detail", medical_record_id=medical_record_id)
 
 
-# def create(request: HttpRequest) -> HttpResponse:
-#     """Render form to create a new medical record.
+# Crud for residents
+def resident_create(request: HttpRequest) -> HttpResponse:
+    """Create view to create a resident or show a form to create a resident.
 
-#     Args:
-#         request (HttpRequest): The HTTP request.
+    Args:
+        request (HttpRequest): The HTTP request
 
-#     Returns:
-#         HttpResponse: Form to create a new medical record.
-#     """
-#     residents_without_medical_record = Resident.objects.filter(
-#         medicalrecord__isnull=True
-#     )
+    Returns:
+        HttpResponse: If POST save the resident to the database, else if GET show create form.
+    """
+    if request.method == "POST":
+        form = ResidentForm(request.POST)
 
-#     if request.method == "POST":
-#         resident_id = request.POST["resident"]
-#         resident = get_object_or_404(Resident, pk=resident_id)
+        if form.is_valid():
+            resident = form.save()
 
-#         if MedicalRecord.objects.filter(resident=resident).exists():
-#             return render(
-#                 request,
-#                 "records/create.html",
-#                 {
-#                     "residents": residents_without_medical_record,
-#                     "error": "This resident already has medical record.",
-#                 },
-#                 status=400,
-#             )
+            return redirect("records:resident_detail", resident_id=resident.id)
 
-#         medical_record = MedicalRecord.objects.create(resident=resident)
-#         return redirect("records:detail", medical_record_id=medical_record.pk)
+    else:
+        form = ResidentForm()
 
-#     return render(
-#         request, "records/create.html", {"residents": residents_without_medical_record}
-#     )
+    context = {
+        "form": form,
+        "title": "Create a resident",
+        "button_submit": "Create a resident",
+    }
+
+    return render(request, "residents/resident_form.html", context)
 
 
-# def update(request: HttpRequest, medical_record_id: int) -> HttpResponse:
-#     """Render update page to update an existing medical record.
+def resident_index(request: HttpRequest) -> HttpResponse:
+    """Render the page for all residents.
 
-#     Args:
-#         request (HttpRequest): The HTTP request.
-#         medical_record_id (int): ID of medical record.
+    Args:
+        request (HttpRequest): The HTTP request.
 
-#     Returns:
-#         HttpResponse: Form to update an existing medical record.
-#     """
-#     medical_record = get_object_or_404(MedicalRecord, id=medical_record_id)
+    Returns:
+        HttpResponse: Render the page for all residents.
+    """
+    residents = Resident.objects.all()
+    context = {"residents": residents}
+    return render(request, "residents/index.html", context)
 
-#     if request.method == "POST":
-#         resident_id = request.POST["resident"]
-#         resident = get_object_or_404(Resident, pk=resident_id)
-#         medical_record.resident = resident
-#         medical_record.save()
 
-#         return redirect("records:detail", medical_record_id=medical_record.pk)
+def resident_detail(request: HttpRequest, resident_id: int) -> HttpResponse:
+    """View function to get the detail page a specific resident.
 
-#     residents = Resident.objects.filter(
-#         Q(medicalrecord__isnull=True) | Q(pk=medical_record.resident_id)
-#     )
+    Args:
+        request (HttpRequest): The HTTP request
+        resident_id (int): The id of the resident derived from the URL.
 
-#     return render(
-#         request,
-#         "records/update.html",
-#         {
-#             "medical_record": medical_record,
-#             "residents": residents,
-#         },
-#     )
+    Returns:
+        HttpResponse: Render the detail page for resident with resident_id.
+    """
+    resident = get_object_or_404(Resident, pk=resident_id)
+    context = {"resident": resident}
+    return render(request, "residents/detail.html", context)
+
+
+def resident_update(request: HttpRequest, resident_id: int) -> HttpResponse:
+    """View function to update a resident.
+
+    Args:
+        request (HttpRequest): The HTTP request.
+        resident_id (int): The id of the resident which should be updated.
+
+    Returns:
+        HttpResponse: Showing the update form.
+    """
+    resident = get_object_or_404(Resident, pk=resident_id)
+
+    if request.method == "POST":
+        form = ResidentForm(request.POST, instance=resident)
+
+        if form.is_valid():
+            form.save()
+            return redirect("records:resident_detail", resident_id=resident.id)
+
+    else:
+        form = ResidentForm(instance=resident)
+
+    context = {
+        "form": form,
+        "title": "Update the resident",
+        "button_submit": "Update the resident",
+    }
+
+    return render(request, "residents/resident_form.html", context)
+
+
+def resident_delete(request: HttpRequest, resident_id: int) -> HttpResponse:
+    """Delete an existing resident.
+
+    Args:
+        request (HttpRequest): The HTTP request.
+        resident_id (int): Id of the resident.
+
+    Returns:
+        HttpResponse: Redirect to the resident index page.
+    """
+    resident = get_object_or_404(Resident, pk=resident_id)
+
+    if request.method == "POST":
+        resident.delete()
+        return redirect("records:resident_index")
+
+    return redirect("records:resident_detail", resident_id=resident_id)
