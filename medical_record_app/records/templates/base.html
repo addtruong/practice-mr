@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mediapp{% endblock %}</title>
+</head>
+
+<body>
+    <nav>
+        <a href="{% url 'records:index' %}">Medical records</a>
+        <a href="{% url 'records:resident_index' %}">Residents</a>
+    </nav>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        Mediapp © 2026
+    </footer>
+
+</body>
+</html>

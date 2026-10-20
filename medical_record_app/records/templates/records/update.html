@@ -1,28 +1,36 @@
-<h1>Update Medical Record</h1>
+{% extends "base.html" %}
 
-<form method="post">
-  {% csrf_token %}
+{% block title %}
+ Update medical record 
+{% endblock %}
 
-  {{ form.as_p }}
+{% block content %}
+  <h1>Update Medical Record</h1>
 
-  <h2>Diagnoses</h2>
+  <form method="post">
+    {% csrf_token %}
 
-  {{ formset.management_form }}
+    {{ form.as_p }}
 
-  {% for f in formset %}
-    <div>
-      {{ f.as_p }}
-    </div>
-  {% endfor %}
+    <h2>Diagnoses</h2>
 
-  <button type="submit">Update medical record</button>
-</form>
+    {{ formset.management_form }}
 
-<ul>
-    <li>
-        <a href="{% url 'records:detail' medical_record.id %}">Back to medical record</a>
-    </li>
-    <li>
-        <a href="{% url 'records:index' %}">All medical records</a>
-    </li>
-</ul>
+    {% for f in formset %}
+      <div>
+        {{ f.as_p }}
+      </div>
+    {% endfor %}
+
+    <button type="submit">Update medical record</button>
+  </form>
+
+  <ul>
+      <li>
+          <a href="{% url 'records:detail' medical_record.id %}">Back to medical record</a>
+      </li>
+      <li>
+          <a href="{% url 'records:index' %}">All medical records</a>
+      </li>
+  </ul>
+{% endblock %}

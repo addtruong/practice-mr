@@ -1,8 +1,17 @@
-<h1>{{ title }}</h1>
+{% extends "base.html" %}
 
-<form method="post">
-    {% csrf_token %}
 
-    {{ form.as_p }}
-    <button type="submit">{{ button_submit }}</button>
-</form>
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <button type="submit">{{ button_submit }}</button>
+    </form>
+{% endblock  %}
