@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -51,7 +52,9 @@ def index(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponse: Rendered index page.
     """
-    medical_records = MedicalRecord.objects.all()
+    medical_records = MedicalRecord.objects.annotate(
+        diagnosis_count=Count("medicalrecorddiagnosis")
+    )
     context = {"medical_records": medical_records}
     return render(request, "records/index.html", context)
 

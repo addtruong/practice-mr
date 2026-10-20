@@ -5,20 +5,23 @@
 {% endblock %}
 
 {% block content %}
-  <h1>New Medical Record</h1>
+  <div class="mx-auto form-wrapper">
 
-  <form method="post">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <h2>Diagnoses</h2>
-    {{ formset.management_form }}
-
-    {% for f in formset %}
-      <div>{{ f.as_p }}</div>
-    {% endfor %}
-
-    <button type="submit">Create medical record</button>
-  </form>
+    <h1>New Medical Record</h1>
+  
+    <form method="post">
+      {% csrf_token %}
+  
+      {{ form.as_p }}
+  
+      <h2>Diagnoses</h2>
+      {{ formset.management_form }}
+  
+      {% for f in formset %}
+        <div>{{ f.as_p }}</div>
+      {% endfor %}
+  
+      <button class="btn btn-primary" type="submit">Create medical record</button>
+    </form>
+  </div> 
 {% endblock %}

@@ -6,13 +6,17 @@
 {% endblock %}
 
 {% block content %}
-    <div class="mx-auto" style="max-width: 600px;">
+    <div class="mx-auto form-wrapper">
         <h3>{{ title }}</h3>
         <form method="post">
             {% csrf_token %}
     
             {{ form.as_p }}
-            <button class="btn btn-primary" type="submit">{{ button_submit }}</button>
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-person"></i>
+                {{ button_submit }}
+            </button>
         </form>
     </div>
 {% endblock  %}
+

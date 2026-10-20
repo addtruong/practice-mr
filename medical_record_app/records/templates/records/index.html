@@ -9,15 +9,18 @@
         <h1>Medical records</h1>
     
         <a href="{% url 'records:create' %}" class="btn btn-primary">
+            <i class="bi bi-clipboard2-pulse"></i>
             Create medical record
         </a>
     </div>
     {% if medical_records %}
-        <div class="table-responsive">
+        <div class="table-responsive table-wrapper">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">Medical record for</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Patient</th>
+                        <th scope="col" class="text-end">No. of diagnoses</th>
                         <th scope="col" class="text-end">Actions</th>
                     </tr>
                 </thead>
@@ -25,6 +28,9 @@
                 <tbody>
                     {% for record in medical_records %}
                         <tr>
+                            <td>
+                                {{ record.id }}
+                            </td>
                             <td>
                                 <a
                                     class="text-decoration-none"
@@ -34,6 +40,9 @@
                                     {{ record.resident.last_name }}
                                 </a>
                             </td>
+                            <td class="text-end">
+                                {{ record.diagnosis_count }}
+                            </td>
 
                             <td class="text-end">
                                 <div class="d-inline-flex gap-2">
@@ -41,6 +50,7 @@
                                         class="btn btn-sm btn-outline-primary"
                                         href="{% url 'records:update' medical_record_id=record.id %}"
                                     >
+                                        <i class="bi bi-pencil"></i>
                                         Edit
                                     </a>
 
@@ -55,6 +65,7 @@
                                             type="submit"
                                             class="btn btn-sm btn-outline-danger"
                                         >
+                                            <i class="bi bi-trash"></i>
                                             Delete
                                         </button>
                                     </form>
