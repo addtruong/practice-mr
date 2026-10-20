@@ -1,22 +1,48 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Mediapp{% endblock %}</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Mediapp{% endblock %}</title>
+        <!-- Bootstrap -->
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous"> -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        >
+        <!-- Custom styling -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'records/css/style.css' %}">
+    </head>
 
-<body>
-    <nav>
-        <a href="{% url 'records:index' %}">Medical records</a>
-        <a href="{% url 'records:resident_index' %}">Residents</a>
-    </nav>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
-    <footer>
-        Mediapp © 2026
-    </footer>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'records:index' %}">MediRec</a>
 
-</body>
+                <div class="navbar-nav ms-auto">
+                    <a href="{% url 'records:index' %}" class="nav-link">Medical records</a>
+                    <a href="{% url 'records:resident_index' %}" class="nav-link">Residents</a>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="container my-5">
+                <!-- <div class="mx-auto" style="max-width:800px;"> -->
+                    {% block content %}
+                    {% endblock %}
+                <!-- </div> -->
+            </div>
+        </main>
+        <footer class="mt-auto py-3 bg-body-tertiary border-top">
+            <div class="container">
+                Mediapp © 2026
+            </div>
+        </footer>
+
+        <!-- Bootstrap Javascript -->
+        <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
+    </body>
 </html>
