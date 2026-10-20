@@ -20,6 +20,7 @@ Residents
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Name</th>
+                        <th scope="col">Date of birth</th>
                         <th scope="col" class="text-end">Actions</th>
                     </tr>
                 </thead>
@@ -31,6 +32,9 @@ Residents
                                     {{ resident.first_name }}
                                     {{ resident.last_name }}
                                 </a>
+                            </td>
+                            <td>
+                                {{ resident.date_of_birth }}
                             </td>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-2">

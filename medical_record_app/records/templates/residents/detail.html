@@ -1,11 +1,48 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Residents detail page
+    Resident detail page | {{ resident.first_name }} {{resident.last_name}}
 {% endblock %}
 
 {% block content %}
-    <h1>Resident</h1>
-    <p>First name:  {{ resident.first_name }}</p>
-    <p>Last name:  {{ resident.last_name }}</p>
+    <a 
+        class="text-decoration-none"
+        href="{% url 'records:resident_index' %}"
+    >
+        < All residents
+    </a>
+    <div class="d-flex align-items-center justify-content-between my-2">
+        <div>
+            <span class="badge text-bg-secondary mb-2">Resident</span>
+            <h3>{{ resident.last_name }}, {{ resident.first_name }}</h3>
+        </div>
+
+        <div class="d-inline-flex gap-2">
+            <a 
+                class="btn btn-sm btn-outline-primary"
+                href="{% url 'records:resident_update' resident_id=resident.id %}"
+            >
+                Edit
+            </a>
+            <form
+                method="post"
+                action="{% url 'records:resident_delete' resident.id %}"
+                class="d-inline"
+                onsubmit="return confirm('Do you want to delete this resident?')"
+            >
+                {% csrf_token %}
+                <button
+                    type="submit"
+                    class="btn btn-sm btn-outline-danger"
+                >
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    {% if resident.medicalrecord %}
+        <a class="text-decoration-none" href="{% url 'records:detail' resident.medicalrecord.id %}">Medical record</a>
+    {% else %}
+        <p>No medical record for {{ resident }}</p>
+    {% endif %}
 {% endblock %}

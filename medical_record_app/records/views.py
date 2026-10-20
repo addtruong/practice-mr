@@ -7,7 +7,7 @@ from .forms import (
     MedicalRecordForm,
     ResidentForm,
 )
-from .models import MedicalRecord, Resident
+from .models import MedicalRecord, MedicalRecordDiagnosis, Resident
 
 
 # CRUD for medical records
@@ -66,8 +66,14 @@ def detail(request: HttpRequest, medical_record_id: int) -> HttpResponse:
     Returns:
         HttpResponse: Rendered medical record detail page.
     """
-    medical_record = MedicalRecord.objects.get(pk=medical_record_id)
-    context = {"medical_record": medical_record}
+    medical_record = get_object_or_404(MedicalRecord, id=medical_record_id)
+    medical_record_diagnoses = MedicalRecordDiagnosis.objects.filter(
+        medical_record=medical_record
+    )
+    context = {
+        "medical_record": medical_record,
+        "medical_record_diagnoses": medical_record_diagnoses,
+    }
     return render(request, "records/detail.html", context)
 
 
@@ -210,8 +216,8 @@ def resident_update(request: HttpRequest, resident_id: int) -> HttpResponse:
 
     context = {
         "form": form,
-        "title": "Update the resident",
-        "button_submit": "Update the resident",
+        "title": "Update resident",
+        "button_submit": "Update resident",
     }
 
     return render(request, "residents/resident_form.html", context)

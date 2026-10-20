@@ -11,6 +11,12 @@ class Resident(models.Model):
         max_length=200, help_text="Please enter the last name of the resident."
     )
 
+    date_of_birth = models.DateField(
+        verbose_name="Date of birth",
+        help_text="Please enter the date of birth.",
+        null=True,
+    )
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 

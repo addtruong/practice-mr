@@ -12,6 +12,14 @@ class ResidentForm(forms.ModelForm):
         model = Resident
         fields = "__all__"
 
+        widgets = {  # noqa: RUF012
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "date_of_birth": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
+        }
+
 
 # Forms for medical record
 class MedicalRecordForm(forms.ModelForm):
