@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="mx-auto form-wrapper">
   <h1>Update Medical Record</h1>
 
   <form method="post">
@@ -21,16 +22,9 @@
         {{ f.as_p }}
       </div>
     {% endfor %}
-
-    <button type="submit">Update medical record</button>
+    <a class="btn btn-secondary" href="{% url 'records:detail' medical_record.id %}">Cancel</a>
+    <button class="btn btn-primary" type="submit">Update medical record</button>
   </form>
 
-  <ul>
-      <li>
-          <a href="{% url 'records:detail' medical_record.id %}">Back to medical record</a>
-      </li>
-      <li>
-          <a href="{% url 'records:index' %}">All medical records</a>
-      </li>
-  </ul>
+</div>
 {% endblock %}

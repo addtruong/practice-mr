@@ -142,14 +142,20 @@ td, th {
 
 h1 {
     font-size: 1.6rem;
-    font-weight: 400;
 }
 
 h2 {
-    font-size: 1.4rem;
-    font-weight: 400;
+    font-size: 1.2rem;
 }
 
 .helptext {
     color: var(--text-muted-2);
+}
+
+.nav-link {
+    margin-left: 1.2rem;
+}
+
+.nav-link:hover {
+    color: var(--accent);
 }
