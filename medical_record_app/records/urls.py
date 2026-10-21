@@ -25,4 +25,6 @@ urlpatterns = [
         views.resident_delete,
         name="resident_delete",
     ),
+    # Diagnosis
+    path("diagnosis/", views.DiagnosisListView.as_view(), name="diagnosis_index"),
 ]

@@ -1,6 +1,7 @@
 from django.db.models import Count
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms import (
     DiagnosisCreateFormSet,
@@ -8,7 +9,7 @@ from .forms import (
     MedicalRecordForm,
     ResidentForm,
 )
-from .models import MedicalRecord, MedicalRecordDiagnosis, Resident
+from .models import Diagnosis, MedicalRecord, MedicalRecordDiagnosis, Resident
 
 
 # CRUD for medical records
@@ -136,7 +137,7 @@ def delete(request: HttpRequest, medical_record_id: int) -> HttpResponse:
     return redirect("records:detail", medical_record_id=medical_record_id)
 
 
-# Crud for residents
+# CRUD for residents
 def resident_create(request: HttpRequest) -> HttpResponse:
     """Create view to create a resident or show a form to create a resident.
 
@@ -243,3 +244,9 @@ def resident_delete(request: HttpRequest, resident_id: int) -> HttpResponse:
         return redirect("records:resident_index")
 
     return redirect("records:resident_detail", resident_id=resident_id)
+
+
+# CRUD for diagnoses
+class DiagnosisListView(ListView):
+    model = Diagnosis
+    template_name = "diagnoses/diagnosis_list.html"

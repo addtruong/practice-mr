@@ -20,6 +20,7 @@ Residents
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
+                        <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Date of birth</th>
                         <th scope="col" class="text-end">Actions</th>
@@ -28,6 +29,9 @@ Residents
                 <tbody>
                     {% for resident in residents %}
                         <tr>
+                            <td>
+                                {{ resident.id }}
+                            </td>
                             <td>
                                 <a class="text-decoration-none" href="{% url 'records:resident_detail' resident.id %}">
                                     {{ resident.first_name }}
